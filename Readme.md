@@ -28,8 +28,11 @@ class Thing
 {
     public function something()
     {
+	// plain import to array
         $data = (new ExcelSheet)->import('/tmp/spreadsheet.xlsx');
         ...;
+	// if you want each cell to have whitespace trimmed from the beginning/end
+	$data = (new ExcelSheet)->trimmedImport('/tmp/spreadsheet.xlsx');
     }
 
     public function somethingElse()

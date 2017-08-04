@@ -8,7 +8,7 @@ use Box\Spout\Common\Type;
 
 class ExcelSheet
 {
-    public function import($filename)
+    public function import($filename, $trim = false)
     {
         $reader = ReaderFactory::create(Type::XLSX);
         $reader->open($filename);
@@ -19,7 +19,15 @@ class ExcelSheet
             }
         }
         $reader->close();
+        if ($trim) {
+            $rows = $this->trim($rows);
+        }
         return $rows;
+    }
+
+    public function trimmedImport($filename)
+    {
+        return $this->import($filename, true);
     }
 
     public function generate($data, $filename = null)
@@ -32,5 +40,14 @@ class ExcelSheet
         $writer->addRows($data);
         $writer->close();
         return $filename;
+    }
+
+    private function trim($rows)
+    {
+        $trimmedRows = [];
+        foreach ($rows as $row) {
+            $trimmedRows[] = array_map('trim', $row);
+        }
+        return $trimmedRows;
     }
 }

@@ -12,10 +12,29 @@ class SpreadsheetTest extends TestCase
     {
         $data = (new ExcelSheet)->import('./tests/data/test.xlsx');
 
+        $row = $data[0];
+        $this->assertEquals('Cell A1', $row[0]);
+        $this->assertEquals('Cell B1', $row[1]);
+        $this->assertEquals('Cell C1', $row[2]);
         $row = $data[1];
-        $this->assertEquals(Carbon::createFromFormat('d/m/Y H:i:s', '22/09/2015 00:00:00'), $row[0]);
-        $this->assertEquals('5pm', $row[1]);
-        $this->assertEquals('ENG4020', $row[2]);
+        $this->assertEquals('Cell A2', $row[0]);
+        $this->assertEquals('Cell B2', $row[1]);
+        $this->assertEquals('Cell C2', $row[2]);
+        $row = $data[2];
+        $this->assertEquals('    Cell A3 With Extra Spaces.  ', $row[0]);
+        $this->assertEquals('Cell B3', $row[1]);
+        $this->assertEquals('Cell C3', $row[2]);
+    }
+
+    /** @test */
+    public function can_trim_whitespace_from_all_cells_while_importing()
+    {
+        $data = (new ExcelSheet)->trimmedImport('./tests/data/test.xlsx');
+
+        $row = $data[2];
+        $this->assertEquals('Cell A3 With Extra Spaces.', $row[0]);
+        $this->assertEquals('Cell B3', $row[1]);
+        $this->assertEquals('Cell C3', $row[2]);
     }
 
     /** @test */
