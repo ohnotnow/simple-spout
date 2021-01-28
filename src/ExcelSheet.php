@@ -5,17 +5,19 @@ namespace Ohffs\SimpleSpout;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 class ExcelSheet
 {
     public function import($filename, $trim = false)
     {
-        $reader = ReaderFactory::create(Type::XLSX);
+        $reader = ReaderEntityFactory::createXLSXReader();
         $reader->open($filename);
         $rows = [];
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $row) {
-                $rows[] = $row;
+                $rows[] = $row->toArray();
             }
         }
         $reader->close();
@@ -35,9 +37,11 @@ class ExcelSheet
         if (!$filename) {
             $filename = tempnam('/tmp', 'sim');
         }
-        $writer = WriterFactory::create(Type::XLSX);
+        $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToFile($filename);
-        $writer->addRows($data);
+        foreach ($data as $rowArray) {
+            $writer->addRows([WriterEntityFactory::createRowFromArray($rowArray)]);
+        }
         $writer->close();
         return $filename;
     }
