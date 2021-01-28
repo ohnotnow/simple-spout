@@ -10,7 +10,7 @@ Add to your composer.json file entries for :
 ```
 {
     "require": {
-        "ohffs/simple-spout": "dev-master"
+        "ohffs/simple-spout": "^1.0"
     }
 }
 ```
@@ -47,4 +47,3 @@ class Thing
     }
 }
 ```
-
