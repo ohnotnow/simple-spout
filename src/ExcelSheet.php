@@ -27,6 +27,26 @@ class ExcelSheet
         return $rows;
     }
 
+    public function importFirst($filename, $trim = false)
+    {
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($filename);
+        $rows = [];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if ($sheet->getIndex() !== 0) {
+                continue;
+            }
+            foreach ($sheet->getRowIterator() as $row) {
+                $rows[] = $row->toArray();
+            }
+        }
+        $reader->close();
+        if ($trim) {
+            $rows = $this->trim($rows);
+        }
+        return $rows;
+    }
+
     public function trimmedImport($filename)
     {
         return $this->import($filename, true);
