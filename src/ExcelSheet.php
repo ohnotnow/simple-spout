@@ -46,6 +46,18 @@ class ExcelSheet
         return $rows;
     }
 
+    public function importActive($filename, $trim = false)
+    {
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($filename);
+        $rows = $this->getRowsFromSheets($reader, $sheetNumber);
+        $reader->close();
+        if ($trim) {
+            $rows = $this->trim($rows);
+        }
+        return $rows;
+    }
+
     public function trimmedImport($filename)
     {
         return $this->import($filename, true);
@@ -74,11 +86,14 @@ class ExcelSheet
         return $trimmedRows;
     }
 
-    private function getRowsFromSheets($reader, $onlySheet = null, $trim = false)
+    private function getRowsFromSheets($reader, $onlySheet = null, $onlyActive = false)
     {
         $rows = [];
         foreach ($reader->getSheetIterator() as $sheet) {
             if ($onlySheet !== null && $sheet->getIndex() !== $onlySheet) {
+                continue;
+            }
+            if ($onlyActive && !$sheet->isActive()) {
                 continue;
             }
             foreach ($sheet->getRowIterator() as $row) {
