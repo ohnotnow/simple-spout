@@ -14,12 +14,7 @@ class ExcelSheet
     {
         $reader = ReaderEntityFactory::createXLSXReader();
         $reader->open($filename);
-        $rows = [];
-        foreach ($reader->getSheetIterator() as $sheet) {
-            foreach ($sheet->getRowIterator() as $row) {
-                $rows[] = $row->toArray();
-            }
-        }
+        $rows = $this->getRowsFromSheets($reader);
         $reader->close();
         if ($trim) {
             $rows = $this->trim($rows);
@@ -31,15 +26,19 @@ class ExcelSheet
     {
         $reader = ReaderEntityFactory::createXLSXReader();
         $reader->open($filename);
-        $rows = [];
-        foreach ($reader->getSheetIterator() as $sheet) {
-            if ($sheet->getIndex() !== 0) {
-                continue;
-            }
-            foreach ($sheet->getRowIterator() as $row) {
-                $rows[] = $row->toArray();
-            }
+        $rows = $this->getRowsFromSheets($reader, 0);
+        $reader->close();
+        if ($trim) {
+            $rows = $this->trim($rows);
         }
+        return $rows;
+    }
+
+    public function importSheet($filename, $sheetNumber = 0, $trim = false)
+    {
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($filename);
+        $rows = $this->getRowsFromSheets($reader, $sheetNumber);
         $reader->close();
         if ($trim) {
             $rows = $this->trim($rows);
@@ -73,5 +72,19 @@ class ExcelSheet
             $trimmedRows[] = array_map('trim', $row);
         }
         return $trimmedRows;
+    }
+
+    private function getRowsFromSheets($reader, $onlySheet = null, $trim = false)
+    {
+        $rows = [];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if ($onlySheet !== null && $sheet->getIndex() !== $onlySheet) {
+                continue;
+            }
+            foreach ($sheet->getRowIterator() as $row) {
+                $rows[] = $row->toArray();
+            }
+        }
+        return $rows;
     }
 }
