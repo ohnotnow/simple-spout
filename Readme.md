@@ -5,15 +5,7 @@ and convert it to a PHP array, and can take a PHP array and convert it to an exc
 
 ## Installation
 
-Add to your composer.json file entries for :
-
-```
-{
-    "require": {
-        "ohffs/simple-spout": "^1.0"
-    }
-}
-```
+Just do a `composer require ohffs/simple-spout`.
 
 ## Usage
 
@@ -28,11 +20,20 @@ class Thing
 {
     public function something()
     {
-	// plain import to array
+	    // plain import to array
         $data = (new ExcelSheet)->import('/tmp/spreadsheet.xlsx');
         ...;
-	// if you want each cell to have whitespace trimmed from the beginning/end
-	$data = (new ExcelSheet)->trimmedImport('/tmp/spreadsheet.xlsx');
+	    // if you want each cell to have whitespace trimmed from the beginning/end
+	    $data = (new ExcelSheet)->trimmedImport('/tmp/spreadsheet.xlsx');
+
+        // import just the very first sheet
+        $data = (new ExcelSheet)->importFirst('/tmp/spreadsheet.xlsx');
+
+        // import a specific sheet
+        $data = (new ExcelSheet)->importSheet('/tmp/spreadsheet.xlsx', 3); // 0-indexed
+
+        // import the 'active' sheet (ie, the one that was open when the file was saved)
+        $data = (new ExcelSheet)->importActive('/tmp/spreadsheet.xlsx');
     }
 
     public function somethingElse()
