@@ -2,17 +2,15 @@
 
 namespace Ohffs\SimpleSpout;
 
-use Box\Spout\Reader\ReaderFactory;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
-use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Reader\XLSX\Reader;
+use OpenSpout\Writer\XLSX\Writer;
+use OpenSpout\Common\Entity\Row;
 
 class ExcelSheet
 {
     public function import($filename, $trim = false)
     {
-        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader = new Reader();
         $reader->open($filename);
         $rows = $this->getRowsFromSheets($reader);
         $reader->close();
@@ -24,7 +22,7 @@ class ExcelSheet
 
     public function importFirst($filename, $trim = false)
     {
-        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader = new Reader();
         $reader->open($filename);
         $rows = $this->getRowsFromSheets($reader, 0);
         $reader->close();
@@ -36,7 +34,7 @@ class ExcelSheet
 
     public function importSheet($filename, $sheetNumber = 0, $trim = false)
     {
-        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader = new Reader();
         $reader->open($filename);
         $rows = $this->getRowsFromSheets($reader, $sheetNumber);
         $reader->close();
@@ -48,7 +46,7 @@ class ExcelSheet
 
     public function importActive($filename, $trim = false)
     {
-        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader = new Reader();
         $reader->open($filename);
         $rows = $this->getRowsFromSheets($reader, $sheetNumber);
         $reader->close();
@@ -68,10 +66,10 @@ class ExcelSheet
         if (!$filename) {
             $filename = tempnam('/tmp', 'sim');
         }
-        $writer = WriterEntityFactory::createXLSXWriter();
+        $writer = new Writer();
         $writer->openToFile($filename);
         foreach ($data as $rowArray) {
-            $writer->addRows([WriterEntityFactory::createRowFromArray($rowArray)]);
+            $writer->addRows([Row::fromValues($rowArray)]);
         }
         $writer->close();
         return $filename;
