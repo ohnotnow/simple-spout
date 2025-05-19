@@ -1,6 +1,6 @@
 # Basic PHP spreadsheet import/export
 
-This is just a basic wrapper around 'OpenSpout' (https://github.com/openspout/openspout). It will read a spreadsheet and convert it to a PHP array, and can take a PHP array and convert it to an excel file.
+This is just a basic wrapper around [OpenSpout](https://github.com/openspout/openspout). It will read a spreadsheet and convert it to a PHP array, and can take a PHP array and convert it to an excel file.
 
 ## Installation
 
