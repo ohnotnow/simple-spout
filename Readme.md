@@ -8,7 +8,7 @@ Just do a `composer require ohffs/simple-spout`.
 
 ## Usage
 
-```
+```php
 <?php
 
 namespace App\Whatever;
@@ -19,11 +19,11 @@ class Thing
 {
     public function something()
     {
-	    // plain import to array
+        // plain import to array
         $data = (new ExcelSheet)->import('/tmp/spreadsheet.xlsx');
-        ...;
-	    // if you want each cell to have whitespace trimmed from the beginning/end
-	    $data = (new ExcelSheet)->trimmedImport('/tmp/spreadsheet.xlsx');
+
+        // if you want each cell to have whitespace trimmed from the beginning/end
+        $data = (new ExcelSheet)->trimmedImport('/tmp/spreadsheet.xlsx');
 
         // import just the very first sheet
         $data = (new ExcelSheet)->importFirst('/tmp/spreadsheet.xlsx');
