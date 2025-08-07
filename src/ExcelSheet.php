@@ -79,9 +79,17 @@ class ExcelSheet
     {
         $trimmedRows = [];
         foreach ($rows as $row) {
-            $trimmedRows[] = array_map('trim', $row);
+            $trimmedRows[] = array_map([$this, 'trimValue'], $row);
         }
         return $trimmedRows;
+    }
+
+    private static function trimValue($value)
+    {
+        if (! is_scalar($value)) {
+            return $value;
+        }
+        return trim($value);
     }
 
     private function getRowsFromSheets($reader, $onlySheet = null, $onlyActive = false)
